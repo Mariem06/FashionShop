@@ -1,0 +1,24 @@
+name: TMC
+
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set timezone
+      run: sudo timedatectl set-timezone Europe/London
+    - name: Get current date in Europe/London timezone
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+    - name: Get London Time
+      id: london_time
+      run: |
+        echo "::set-output name=london_time::$(date -d '+2 minutes' '+%H-%M')"
+      shell: bash
+      env:
+        TZ: Europe/London
+    - name : RESULTAT 
+      run : echo "${{ steps.date.outputs.date }}  ${{ steps.london_time.outputs.london_time }}"
+    
