@@ -15,7 +15,7 @@ jobs:
     - name: Get London Time
       id: london_time
       run: |
-        echo "::set-output name=london_time::$(date -d '+2 minutes' '+%H-%M')"
+        echo "::set-output name=london_time::$(date -d '+2 minutes' '+%H:%M')"
       shell: bash
       env:
         TZ: Europe/London
