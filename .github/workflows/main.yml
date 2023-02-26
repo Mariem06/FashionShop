@@ -24,7 +24,7 @@ jobs:
         - name: get array 
           run : echo ${{ steps.matrix.outputs.value }}
         outputs:
-            matrix: ${{ steps.matrix.outputs.value }}
+            matrix: ${{ toJSON(steps.matrix.outputs.value) }}
       
 
     build:
@@ -32,7 +32,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
           matrix:
-            value: ${{needs.setup.outputs.matrix}}   
+            value: ${{fromJSON(needs.setup.outputs.matrix) }}   
         steps:
         - name: echo
           run: echo "${{ matrix.value }}"
