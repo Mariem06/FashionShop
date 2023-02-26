@@ -19,11 +19,11 @@ jobs:
             for word in "${words[@]}"; do
               output_array=[]
               output_array+=["$word"]
-            echo " ::set-output name=value::[\"a\", \"b\", \"c\"]"
+            echo " ::set-output name=value::$output_array"
             done
           shell: bash
         - name: get array 
-          run : echo ${{ toArray( steps.matrix.outputs.value) }}
+          run : echo ${{ toJSON( steps.matrix.outputs.value) }}
         outputs:
             matrix: ${{ toJSON(steps.matrix.outputs.value) }}
       
@@ -33,10 +33,10 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
           matrix:
-            value: ${{fromJSON(needs.setup.outputs.matrix) }}   
+            word: ["test","test_job"]  
         steps:
         - name: echo
-          run: echo "${{ matrix.value }}"
+          run: echo "${{ matrix.word }}"
         - name: Set timezone
           run: sudo timedatectl set-timezone Europe/London 
         - name: Get current date in Europe/London timezone
