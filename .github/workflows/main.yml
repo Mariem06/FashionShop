@@ -1,24 +1,55 @@
 name: TMC
-
 on: [push]
+  #label: 
+ #   types: [created, deleted]
 jobs:
-  build:
-    runs-on: ubuntu-latest
+    setup:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v3
+        - name: Récupérer le message de commit 
+          id: get_commit_message
+          run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})"  
+        - name: array
+          id: matrix
+          env:
+            message: "${{ steps.get_commit_message.outputs.commit_message }}"
+          run: |
+            IFS=',' read -ra words <<< "$message"
+            for word in "${words[@]}"; do
+              output_array+=("$word")
+            echo "::set-output name=value::${output_array[@]}"
+            done
+          shell: bash
+        - name: get array 
+          run : echo ${{ steps.matrix.outputs.value }}
+        outputs:
+            matrix: ${{ steps.matrix.outputs.value }}
+      
 
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set timezone
-      run: sudo timedatectl set-timezone Europe/London
-    - name: Get current date in Europe/London timezone
-      id: date
-      run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-    - name: Get London Time
-      id: london_time
-      run: |
-        echo "::set-output name=london_time::$(date -d '+2 minutes' '+%H:%M')"
-      shell: bash
-      env:
-        TZ: Europe/London
-    - name : RESULTAT 
-      run : echo "${{ steps.date.outputs.date }}  ${{ steps.london_time.outputs.london_time }}"
-    
+    build:
+        needs: [ setup ]
+        runs-on: ubuntu-latest
+        strategy:
+          matrix:
+            value: ${{fromJson(needs.setup.outputs.matrix)}}   
+        steps:
+        - name: echo
+          run: echo "${{ matrix.value }}"
+        - name: Set timezone
+          run: sudo timedatectl set-timezone Europe/London
+        - name: Get current date in Europe/London timezone
+          id: date
+          run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        - name: Get London Time
+          id: london_time
+          run: |
+            echo "::set-output name=london_time::$(date -d '+2 minutes' '+%H:%M')"
+          shell: bash
+          env:
+            TZ: Europe/London
+
+        
+        
+        
+  
