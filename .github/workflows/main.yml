@@ -37,7 +37,7 @@ jobs:
         - name: echo
           run: echo "${{ matrix.value }}"
         - name: Set timezone
-          run: sudo timedatectl set-timezone Europe/London
+          run: sudo timedatectl set-timezone Europe/London 
         - name: Get current date in Europe/London timezone
           id: date
           run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
