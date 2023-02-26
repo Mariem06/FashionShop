@@ -22,7 +22,7 @@ jobs:
             done
           shell: bash
         - name: get array 
-          run : echo ${{ steps.matrix.outputs.value }}
+          run : echo ${{ toJSON( steps.matrix.outputs.value) }}
         outputs:
             matrix: ${{ toJSON(steps.matrix.outputs.value) }}
       
