@@ -11,7 +11,7 @@ jobs:
           id: get_commit_message
           run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})"  
         - name: array
-          id: matrix
+          id: array
           env:
             message: "${{ steps.get_commit_message.outputs.commit_message }}"
           run: |
@@ -19,21 +19,19 @@ jobs:
             for word in "${words[@]}"; do
               output_array=[]
               output_array+=["$word"]
-            echo " ::set-output name=value::$output_array"
+            echo "::set-output name=array::["test","test_job"]"
             done
           shell: bash
         - name: get array 
-          run : echo ${{ toJSON( steps.matrix.outputs.value) }}
-        outputs:
-            matrix: ${{ toJSON(steps.matrix.outputs.value) }}
-      
+          run : echo ["test","test_job"]
+       
 
     build:
         needs: [ setup ]
         runs-on: ubuntu-latest
         strategy:
           matrix:
-            word: ["test","test_job"]  
+            word : ${{needs.setup.steps.array.outputs.array}}   
         steps:
         - name: echo
           run: echo "${{ matrix.word }}"
