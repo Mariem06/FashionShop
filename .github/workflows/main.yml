@@ -17,8 +17,9 @@ jobs:
           run: |
             IFS=',' read -ra words <<< "$message"
             for word in "${words[@]}"; do
+              output_array=[]
               output_array+=("$word")
-            echo "::set-output name=value::${output_array[*]}"
+            echo "::set-output name=value::$output_array"
             done
           shell: bash
         - name: get array 
