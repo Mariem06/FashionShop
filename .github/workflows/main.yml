@@ -19,11 +19,11 @@ jobs:
             for word in "${words[@]}"; do
               output_array=[]
               output_array+=["$word"]
-            echo "::set-output name=value::[\"a\", \"b\", \"c\"]"
+            echo " ::set-output name=value::[\"a\", \"b\", \"c\"]"
             done
           shell: bash
         - name: get array 
-          run : echo ${{ toJSON( steps.matrix.outputs.value) }}
+          run : echo ${{ toArray( steps.matrix.outputs.value) }}
         outputs:
             matrix: ${{ toJSON(steps.matrix.outputs.value) }}
       
