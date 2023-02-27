@@ -33,7 +33,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
           matrix:
-            element: ${{ fromJson(fneeds.setup.outputs.message) }}
+            element: ${{ fromJson(needs.setup.outputs.message) }}
 
 
 
