@@ -1,29 +1,38 @@
 on: [push]
-
 jobs:
-  setup-matrix:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup matrix combinations
-        id: setup-matrix-combinations
-        env:
-            message: "a,b"
-        run: |
-            
-             IFS=',' read -ra words <<< "$message"
-             MATRIX_PARAMS_COMBINATIONS=''
-             for word in "${words[@]}"; do
-              MATRIX_PARAMS_COMBINATIONS+="{word: $word}"$'\n'
-             done
-             echo ::set-output name=matrix-combinations::{\"include\":[$MATRIX_PARAMS_COMBINATIONS]}
-    outputs:
-      matrix-combinations: ${{ steps.setup-matrix-combinations.outputs.matrix-combinations }}
-  matrix-job:
-    runs-on: ubuntu-latest
-    needs: setup-matrix
-    strategy:
-      matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix-combinations) }}
-    steps:
-      - run: |
-          echo word=${{ matrix.word }}
+    setup:
+        runs-on: ubuntu-latest
+        outputs:
+          message: "${{ steps.get_commit_message.outputs.commit_message }}"
+        steps:
+        - uses: actions/checkout@v3
+        - name: Set timezone
+          run: sudo timedatectl set-timezone Europe/London
+        - name: Get current date in Europe/London timezone
+          id: date
+          run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        - name: Get London Time
+          id: london_time
+          run: |
+            echo "::set-output name=london_time::$(date -d '+2 minutes' '+%H:%M')"
+          shell: bash
+          env:
+            TZ: Europe/London
+        - name: Récupérer le message de commit
+          id: get_commit_message
+          run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})"  
       
+    build:
+        needs: [ setup ]
+        runs-on: ubuntu-latest
+        strategy:
+          matrix:
+            value: ${{ needs.setup.outputs.message }}
+        steps:
+        - name: Get London Time
+          run: echo "${{ matrix.value }}"
+
+        
+        
+        
+       
