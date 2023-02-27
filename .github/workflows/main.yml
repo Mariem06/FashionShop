@@ -29,12 +29,11 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
          matrix:
-          element: ${{ split(needs.setup.outputs.message, ',') }}
+          element: ${{ join(',',needs.setup.outputs.message) }}
 
         steps:
         - name: Get London Time 
-          run: echo "${{ matrix.element }}"
-
+          run: parts=(${{ matrix.element.split(',') }})
         
         
         
