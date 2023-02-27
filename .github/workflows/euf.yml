@@ -1,0 +1,24 @@
+name: Split String Example
+
+on: [push]
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      message: ${{ steps.set_message.outputs.message }}
+    steps:
+      - name: Set Message
+        id: set_message
+        run: echo "::set-output name=message::a,b,c"
+
+  my_job:
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        element: ${{ split(needs.setup.outputs.message, ',') }}
+    steps:
+      - name: Get Element
+        run: |
+          echo "Element: ${{ matrix.element }}"
