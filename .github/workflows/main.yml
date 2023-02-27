@@ -1,44 +1,22 @@
 on: [push]
 jobs:
-    setup:
-        runs-on: ubuntu-latest
-        outputs:
-          message: ${{ toJson(steps.split.outputs.words)}}
-        steps:
-        - uses: actions/checkout@v3
-        - name: Set timezone
-          run: sudo timedatectl set-timezone Europe/London
-        - name: Get current date in Europe/London timezone
-          id: date
-          run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-        - name: Get London Time
-          id: london_time
-          run: |
-            echo "::set-output name=london_time::$(date -d '+2 minutes' '+%H:%M')"
-          shell: bash
-          env:
-            TZ: Europe/London
-        - name: Récupérer le message de commit
-          id: get_commit_message
-          run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})"  
-        - name: Extract words from string
-          id: split
-          run: |
-              my_string="Hello,world,how,are,you"
-                  words=(${my_string//,/ })
-                  echo "::set-output name=words::${words[@]}"
-      
-    build:
-        needs: [ setup ]
-        runs-on: ubuntu-latest
-        strategy:
-          matrix:
-            element: ${{ needs.setup.outputs.message }}
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Split string
+      id: split
+      uses: rishabhgupta/split-by@v1
+      with:
+        string: 'Hello,world'
+        split-by: ','
+    outputs:
+      my_matrix: ${{ toJson(steps.split.outputs.result) }}
 
-        steps:
-        - name: Get London Time   
-          run: ${{ matrix.element }})
-        
-        
-        
-       
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        element: ${{ fromJson(needs.setup.outputs.my_matrix) }}
+    steps:
+    - name: Print element
+      run: echo ${{ matrix.element }}
