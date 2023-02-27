@@ -1,28 +1,39 @@
 on: [push]
 
 jobs:
-    job1:
-      runs-on: ubuntu-latest
-      outputs:
-        my-array: ${{ steps.step1.outputs.my-JSON_STRING}}
-      steps:
-        - name: Step 1
-          id: step1
-          
+    setup:
+        runs-on: ubuntu-latest
+        outputs:
+          my_string: ${{ steps.get_commit_message.outputs.commit_message }}
+        steps:
+        - uses: actions/checkout@v3
+        - name: Set timezone
+          run: sudo timedatectl set-timezone Europe/London
+        - name: Get current date in Europe/London timezone
+          id: date
+          run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        - name: Get London Time
+          id: london_time
           run: |
-            myArray=("cat" "dog" "mouse" "frog")
-            echo "::set-output name=JSON_STRING=$( jq -n \
-                  --arg el "$my_array" \
-                  '{elements: $el}' )
+            echo "::set-output name=london_time::$(date -d '+2 minutes' '+%H:%M')"
+          shell: bash
+          env:
+            TZ: Europe/London
+        - name: Récupérer le message de commit
+          id: get_commit_message
+          run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})"  
+  
+    build:
+        needs: [ setup ]
+        runs-on: ubuntu-latest
+        strategy:
+          matrix:
+            value: ${{ needs.setup.outputs.my_string.split(",")  }}
+        steps:
+        - name: Get London Time
+          run: echo "${{ matrix.value }}"
 
-    job2:
-      needs: [job1]
-      runs-on: ubuntu-latest
-      strategy:
-        matrix:
-          my_element: ${{ fromJson(needs.job1.outputs.my-array).elements }}
-      steps:
-        - name: Step 2
-          run: |
-            my_element="${{ matrix.my_element }}"
-            echo "My element is $my_element"
+        
+        
+        
+  
