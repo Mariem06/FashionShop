@@ -21,14 +21,16 @@ jobs:
             TZ: Europe/London
         - name: Récupérer le message de commit
           id: get_commit_message
-          run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})"  
+          run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})" 
+        - name: euf
+          run:  echo ${{ toJson (steps.get_commit_message.outputs.commit_message ) }}
   
     build:
         needs: [ setup ]
         runs-on: ubuntu-latest
         strategy:
           matrix:
-            value: ${{ needs.setup.outputs.my_string.split(",")  }}
+            value: ${{ needs.setup.outputs.my_string }}
         steps:
         - name: Get London Time
           run: echo "${{ matrix.value }}"
