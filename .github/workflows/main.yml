@@ -2,21 +2,27 @@ on: [push]
 jobs:
   setup:
     runs-on: ubuntu-latest
-    steps:
-    - name: Split string
-      id: split
-      uses: rishabhgupta/split-by@v1
-      with:
-        string: 'Hello,world'
-        split-by: ','
     outputs:
-      my_matrix: ${{ toJson(steps.split.outputs.result) }}
-
+      message: ${{ toJson(steps.split.outputs.words)}}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Récupérer le message de commit
+        id: get_commit_message
+        run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})"  
+      - name: Extract words from string
+        id: split
+        run: |
+          my_string="Hello,world,how,are,you"
+          words=(${my_string//,/ })
+          echo "::set-output name=words::${words[@]}"
+      
   build:
+    needs: [ setup ]
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        element: ${{ fromJson(needs.setup.outputs.my_matrix) }}
+        element: ${{ needs.setup.outputs.message }}
+
     steps:
-    - name: Print element
-      run: echo ${{ matrix.element }}
+      - name: Get London Time   
+        run: ${{ matrix.element }}
