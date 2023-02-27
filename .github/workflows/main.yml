@@ -4,20 +4,22 @@ jobs:
     job1:
       runs-on: ubuntu-latest
       outputs:
-        my-array: ${{ toJson(steps.step1.outputs.my-array)}}
+        my-array: ${{ steps.step1.outputs.my-JSON_STRING}}
       steps:
         - name: Step 1
           id: step1
           run: |
-            my_array="value1 value2 value3"
-            echo "::set-output name=my-array::$my_array"
+            my_array=["value1", "value2","value3"]
+            echo "::set-output name=JSON_STRING=$( jq -n \
+                  --arg el "$my_array" \
+                  '{elements: $el}' )
 
     job2:
       needs: [job1]
       runs-on: ubuntu-latest
       strategy:
         matrix:
-          my_element: ${{ fromJson(needs.job1.outputs.my-array) }}
+          my_element: ${{ fromJson(needs.job1.outputs.my-array).elements }}
       steps:
         - name: Step 2
           run: |
