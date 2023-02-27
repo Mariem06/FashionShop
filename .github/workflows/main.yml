@@ -6,7 +6,7 @@ jobs:
     setup:
         runs-on: ubuntu-latest
         outputs:
-         mots: ${{ steps.recuperer-mots.outputs.mots }}
+         mots: ${{ ToJson(steps.recuperer-mots.outputs.mots)}}
         steps:
         - uses: actions/checkout@v3
         - name: Récupérer le message de commit 
