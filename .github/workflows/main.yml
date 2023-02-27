@@ -9,12 +9,13 @@ jobs:
         env:
             message: "a,b"
         run: |
-        
+            
              IFS=',' read -ra words <<< "$message"
              for word in "${words[@]}"; do
-              MATRIX_PARAMS_COMBINATIONS+="{word: $word}"$'\n'
+              MATRIX_PARAMS_COMBINATIONS+=$'\n'
+              MATRIX_PARAMS_COMBINATIONS+="{word: $word}"
              done
-              echo ::set-output name=matrix-combinations::{\"include\":[$MATRIX_PARAMS_COMBINATIONS]}
+             echo ::set-output name=matrix-combinations::{\"include\":[$MATRIX_PARAMS_COMBINATIONS]}
     outputs:
       matrix-combinations: ${{ steps.setup-matrix-combinations.outputs.matrix-combinations }}
   matrix-job:
