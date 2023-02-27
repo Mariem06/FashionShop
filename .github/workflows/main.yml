@@ -31,7 +31,7 @@ jobs:
             - ${{ needs.setup.outputs.message}}.split(",")
         steps:
         - name: Get London Time 
-          run: echo "${{ matrix.value }}"
+          run: echo "${{ matrix.my_array }}"
 
         
         
