@@ -3,7 +3,7 @@ jobs:
     setup:
         runs-on: ubuntu-latest
         outputs:
-          message: "${{ steps.get_commit_message.outputs.commit_message }}"
+          message: "${{ toJson( steps.split.outputs)}}"
         steps:
         - uses: actions/checkout@v3
         - name: Install Actions Toolkit
@@ -23,13 +23,18 @@ jobs:
         - name: Récupérer le message de commit
           id: get_commit_message
           run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})"  
+        - uses: rishabhgupta/split-by@v1
+          id: split
+          with:
+            string: "${{ steps.get_commit_message.outputs.commit_message}}"
+            split-by: ','
       
     build:
         needs: [ setup ]
         runs-on: ubuntu-latest
         strategy:
          matrix:
-          element: ${{ split(needs.setup.outputs.message,',') }}
+          element: ${{ fromJson(needs.setup.outputs.message) }}
 
         steps:
         - name: Get London Time   
