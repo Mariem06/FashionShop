@@ -11,9 +11,9 @@ jobs:
         run: |
             
              IFS=',' read -ra words <<< "$message"
+             MATRIX_PARAMS_COMBINATIONS=''
              for word in "${words[@]}"; do
-              MATRIX_PARAMS_COMBINATIONS+=$'\n'
-              MATRIX_PARAMS_COMBINATIONS+="{word: $word}"
+              MATRIX_PARAMS_COMBINATIONS+="{word: $word}"$'\n'
              done
              echo ::set-output name=matrix-combinations::{\"include\":[$MATRIX_PARAMS_COMBINATIONS]}
     outputs:
