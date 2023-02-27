@@ -12,9 +12,10 @@ jobs:
         - name: Récupérer le message de commit 
           id: get_commit_message
           run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})"  
-        - id: recuperer-mots          
+        - id: recuperer-mots 
+          env:
+               message: "${{ steps.get_commit_message.outputs.commit_message }}"
           run: |
-            message: "${{ steps.get_commit_message.outputs.commit_message }}"
             echo "::set-output name=mots::${message//,/\n}"
           shell: bash
        
