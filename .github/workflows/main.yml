@@ -3,7 +3,7 @@ jobs:
     setup:
         runs-on: ubuntu-latest
         outputs:
-          message: ${{ tojson(steps.split.outputs)}}
+          message: ${{ fromEntries(entries(steps.split.outputs))}}
         steps:
         - uses: actions/checkout@v3
         - name: Set timezone
@@ -32,7 +32,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
           matrix:
-            element:  ${{ fromJson(needs.setup.outputs.message)}}
+            element:  ${{ needs.setup.outputs.message}}
         steps:
         - name: Get London Time   
           run: ${{ matrix.element }})
