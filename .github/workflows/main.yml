@@ -26,8 +26,8 @@ jobs:
         needs: [ setup ]
         runs-on: ubuntu-latest
         strategy:
-          matrix:
-             element: ${{ split(needs.setup.outputs.message, ',') }}
+         matrix:
+           element: ${{ split(needs.setup.outputs.message, ',') }}
         steps:
         - name: Get London Time 
           run: echo "${{ matrix.element }}"
