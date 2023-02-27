@@ -6,18 +6,16 @@ jobs:
     setup:
         runs-on: ubuntu-latest
         outputs:
-         mots: ${{ ToJson(steps.recuperer-mots.outputs.mots)}}
+         mots: ${{ steps.recuperer-mots.outputs.mots}}
         steps:
         - uses: actions/checkout@v3
         - name: Récupérer le message de commit 
           id: get_commit_message
           run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})"  
-        - name: array
-          id: recuperer-mots
-          env:
-            message: "${{ steps.get_commit_message.outputs.commit_message }}"
+        - id: recuperer-mots          
           run: |
-            echo "::set-output name=mots::${message//./\n}"
+            message: "${{ steps.get_commit_message.outputs.commit_message }}"
+            echo "::set-output name=mots::${message//,/\n}"
           shell: bash
        
 
@@ -26,7 +24,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
           matrix:
-             mot: ${{fromJson(needs.setup.outputs.mots)}} 
+             mot: ${{needs.setup.outputs.mots}} 
         steps:
         - name: echo
           run: echo "${{ matrix.mot }}"
