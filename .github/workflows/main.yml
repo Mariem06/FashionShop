@@ -8,8 +8,9 @@ jobs:
       steps:
         - name: Step 1
           id: step1
+          
           run: |
-            my_array=["value1", "value2","value3"]
+            myArray=("cat" "dog" "mouse" "frog")
             echo "::set-output name=JSON_STRING=$( jq -n \
                   --arg el "$my_array" \
                   '{elements: $el}' )
