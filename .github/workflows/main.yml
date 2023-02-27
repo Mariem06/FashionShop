@@ -1,26 +1,20 @@
 name: TMC
 on: [push]
  
+name: build
+on: push
 jobs:
   job1:
     runs-on: ubuntu-latest
     outputs:
-      my-array: ${{ steps.step1.outputs.my-array }}
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - name: Step 1
-        id: step1
-        run: |
-          my_array='["value1", "value2", "value3"]'
-          echo "::set-output name=my-array::$my_array"
-
+      - id: set-matrix
+        run: echo "matrix={\"include\":[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"}]}" >> $GITHUB_OUTPUT
   job2:
-    needs: [job1]
+    needs: job1
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        my_element: ${{ fromJson(needs.job1.outputs.my-array) }}
+      matrix: ${{ fromJSON(needs.job1.outputs.matrix) }}
     steps:
-      - name: Step 2
-        run: |
-          my_element="${{ matrix.my_element }}"
-          echo "My element is $my_element"
+      - run: build
