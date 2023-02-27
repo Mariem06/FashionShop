@@ -22,15 +22,20 @@ jobs:
         - name: Récupérer le message de commit
           id: get_commit_message
           run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})" 
-        - name: euf
-          run:  echo ${{ toJson (steps.get_commit_message.outputs.commit_message ) }}
+        - name: Split version code
+          uses: rishabhgupta/split-by@v1
+          id: split
+          with:
+           string: ${{ steps.get_commit_message.outputs.commit_message }}
+           split-by: ','
+          
   
     build:
         needs: [ setup ]
         runs-on: ubuntu-latest
         strategy:
           matrix:
-            value: ${{ needs.setup.outputs.my_string }}
+            value: ${{ steps.split.outputs}}
         steps:
         - name: Get London Time
           run: echo "${{ matrix.value }}"
