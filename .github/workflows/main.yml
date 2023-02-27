@@ -6,13 +6,15 @@ jobs:
     steps:
       - name: Setup matrix combinations
         id: setup-matrix-combinations
+        env:
+            message: "a,b"
         run: |
-          MATRIX_PARAMS_COMBINATIONS='
-              {"foo": "foo-1", "bar": "bar-1"},
-              {"foo": "foo-1", "bar": "bar-2"},
-              {"foo": "foo-2", "bar": "bar-1"},
-          '
-          echo ::set-output name=matrix-combinations::{\"include\":[$MATRIX_PARAMS_COMBINATIONS]}
+        
+             IFS=',' read -ra words <<< "$message"
+             for word in "${words[@]}"; do
+              MATRIX_PARAMS_COMBINATIONS+=( {"word": "$word"})
+             done
+              echo ::set-output name=matrix-combinations::{\"include\":[$MATRIX_PARAMS_COMBINATIONS]}
     outputs:
       matrix-combinations: ${{ steps.setup-matrix-combinations.outputs.matrix-combinations }}
   matrix-job:
@@ -22,5 +24,5 @@ jobs:
       matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix-combinations) }}
     steps:
       - run: |
-          echo foo=${{ matrix.foo }}
-          echo bar=${{ matrix.bar }}
+          echo word=${{ matrix.word }}
+      
