@@ -27,8 +27,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
           matrix:
-            my_array:
-            - ${{ needs.setup.outputs.message}}.split(",")
+            my_array: ${{ split(${{ needs.setup.outputs.message}}, ",") }}
         steps:
         - name: Get London Time 
           run: echo "${{ matrix.my_array }}"
