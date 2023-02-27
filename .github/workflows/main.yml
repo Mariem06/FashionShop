@@ -32,7 +32,8 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
           matrix:
-            element: ${{ fromJson('[' + Object.values(needs.setup.outputs.message).join(',') + ']') }}
+            element: ${{ fromJson('[' + Object.values(fromJson(needs.setup.outputs.message)).join(',') + ']') }}
+
 
 
 
