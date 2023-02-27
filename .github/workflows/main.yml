@@ -5,25 +5,20 @@ on: [push]
 jobs:
     setup:
         runs-on: ubuntu-latest
+        outputs:
+         mots: ${{ steps.recuperer-mots.outputs.mots }}
         steps:
         - uses: actions/checkout@v3
         - name: Récupérer le message de commit 
           id: get_commit_message
           run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})"  
         - name: array
-          id: array
+          id: recuperer-mots
           env:
             message: "${{ steps.get_commit_message.outputs.commit_message }}"
           run: |
-            IFS=',' read -ra words <<< "$message"
-            for word in "${words[@]}"; do
-              output_array=[]
-              output_array+=["$word"]
-            echo "::set-output name=array::["test","test_job"]"
-            done
+            echo "::set-output name=mots::${message//./\n}"
           shell: bash
-        - name: get array 
-          run : echo ["test","test_job"]
        
 
     build:
@@ -31,10 +26,10 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
           matrix:
-            word : ${{needs.setup.steps.array.outputs.array}}   
+             mot: ${{fromJson(needs.premier-job.outputs.mots)}} 
         steps:
         - name: echo
-          run: echo "${{ matrix.word }}"
+          run: echo "${{ matrix.mot }}"
         - name: Set timezone
           run: sudo timedatectl set-timezone Europe/London 
         - name: Get current date in Europe/London timezone
