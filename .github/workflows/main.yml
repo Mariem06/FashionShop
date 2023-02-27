@@ -3,7 +3,7 @@ jobs:
     setup:
         runs-on: ubuntu-latest
         outputs:
-          message: ${{ steps.split.outputs}}
+          message: ${{ tojson(steps.split.outputs)}}
         steps:
         - uses: actions/checkout@v3
         - name: Set timezone
