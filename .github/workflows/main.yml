@@ -32,7 +32,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
          matrix:
-          element: ${{ needs.setup.outputs.message }}
+          element: ${{ fromJson(needs.setup.outputs.message).value }}
 
         steps:
         - name: Get London Time   
