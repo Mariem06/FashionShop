@@ -27,10 +27,10 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
           matrix:
-            my_array: ${{ split(${{ needs.setup.outputs.message}}, ",") }}
+             element: ${{ split(needs.setup.outputs.message, ',') }}
         steps:
         - name: Get London Time 
-          run: echo "${{ matrix.my_array }}"
+          run: echo "${{ matrix.element }}"
 
         
         
