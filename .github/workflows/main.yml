@@ -1,51 +1,25 @@
 name: TMC
 on: [push]
-  #label: 
- #   types: [created, deleted]
+ 
 jobs:
-    setup:
-        runs-on: ubuntu-latest
-        outputs:
-         mots: ${{ steps.recuperer-mots.outputs.mots}}
-        steps:
-        - uses: actions/checkout@v3
-        - name: Récupérer le message de commit 
-          id: get_commit_message
-          run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})"  
-        - name: message 
-          id: recuperer-mots 
-          env:
-               message: "${{ steps.get_commit_message.outputs.commit_message }}"
+    job1:
+      runs-on: ubuntu-latest
+      outputs:
+        my-array: ${{ steps.step1.outputs.my-array }}
+      steps:
+        - name: Step 1
+          id: step1
           run: |
-            echo "::set-output name=mots::${message//,/\n}"
-          shell: bash
-        - name: get 
-          run : echo ${{ steps.recuperer-mots.outputs.mots}}
-       
-
-    build:
-        needs: [ setup ]
-        runs-on: ubuntu-latest
-        strategy:
-          matrix:
-             mot: ${{needs.setup.outputs.mots}} 
-        steps:
-        - name: echo
-          run: echo "${{ matrix.mot }}"
-        - name: Set timezone
-          run: sudo timedatectl set-timezone Europe/London 
-        - name: Get current date in Europe/London timezone
-          id: date
-          run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-        - name: Get London Time
-          id: london_time
+            my_array="value1 value2 value3"
+            echo "::set-output name=my-array::$my_array"
+    job2:
+      needs: [job1]
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          my_element: ${{ fromJson(needs.job1.outputs.my-array) }}
+      steps:
+        - name: Step 2
           run: |
-            echo "::set-output name=london_time::$(date -d '+2 minutes' '+%H:%M')"
-          shell: bash
-          env:
-            TZ: Europe/London
-
-        
-        
-        
-  
+            my_element="${{ matrix.my_element }}"
+            echo "My element is $my_element"
