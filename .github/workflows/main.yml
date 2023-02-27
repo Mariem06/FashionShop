@@ -31,8 +31,10 @@ jobs:
         needs: [ setup ]
         runs-on: ubuntu-latest
         strategy:
-         matrix:
-          element: ${{ fromJson(needs.setup.outputs.message) }}
+          matrix:
+            element: ${{ fromJson('[' + Object.values(needs.setup.outputs.message).join(',') + ']') }}
+
+
 
         steps:
         - name: Get London Time   
