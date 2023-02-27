@@ -6,8 +6,6 @@ jobs:
           message: "${{ toJson( steps.split.outputs)}}"
         steps:
         - uses: actions/checkout@v3
-        - name: Install Actions Toolkit
-          run: npm install -g @actions/toolkit
         - name: Set timezone
           run: sudo timedatectl set-timezone Europe/London
         - name: Get current date in Europe/London timezone
