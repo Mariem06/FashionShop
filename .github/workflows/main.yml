@@ -3,7 +3,7 @@ jobs:
     setup:
         runs-on: ubuntu-latest
         outputs:
-          message: ${{ toJson(steps.split.outputs.words)}}
+          message: ${{ toJson(steps.split.outputs)}}
         steps:
         - uses: actions/checkout@v3
         - name: Set timezone
@@ -21,23 +21,18 @@ jobs:
         - name: Récupérer le message de commit
           id: get_commit_message
           run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})"  
-        - name: Extract words from string
+        - uses: rishabhgupta/split-by@v1
           id: split
-          run: |
-              my_string="Hello,world,how,are,you"
-                  words=(${my_string//,/ })
-                  echo "::set-output name=words::${words[@]}"
+          with:
+            string: ${{ steps.get_commit_message.outputs.commit_message}}
+            split-by: ','
       
     build:
         needs: [ setup ]
         runs-on: ubuntu-latest
         strategy:
           matrix:
-            element: ${{ toJson(steps.split.outputs.words}}
-
-
-
-
+            element:  ${{ fromJson(needs.setup.outputs.message)}}
         steps:
         - name: Get London Time   
           run: ${{ matrix.element }})
