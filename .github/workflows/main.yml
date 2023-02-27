@@ -33,7 +33,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
           matrix:
-            element: ${{ fromJson(needs.setup.outputs.message) }}.split()
+            element: ${{ toJson(steps.split.outputs.words}}
 
 
 
