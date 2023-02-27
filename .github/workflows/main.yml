@@ -4,7 +4,7 @@ jobs:
     job1:
       runs-on: ubuntu-latest
       outputs:
-        my-array: ${{ steps.step1.outputs.my-array }}
+        my-array: ${{ toJson(steps.step1.outputs.my-array)}}
       steps:
         - name: Step 1
           id: step1
