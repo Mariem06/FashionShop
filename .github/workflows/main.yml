@@ -35,7 +35,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
           matrix:
-            value: ${{ steps.split.outputs}}
+            value: ${{fromJSON( steps.split.outputs)}}
         steps:
         - name: Get London Time
           run: echo "${{ matrix.value }}"
