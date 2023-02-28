@@ -1,26 +1,23 @@
-on: [push]
+name: Sample Run Include Syntax Json Format
+on: push
 jobs:
-  setup:
+  job1:
     runs-on: ubuntu-latest
     outputs:
-      message: ${{ steps.split.outputs.matrix }}
+       matrix: ${{ steps.setmatrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v3
-      - name: Récupérer le message de commit
-        id: get_commit_message
-        run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})" 
-      - name: split
+      - name: Set Dynamic Matrix
+        id: setmatrix
         run: |
-         matrixStringifiedObject="{\"include\":[{\"run\":\"run1\"},{\"run\":\"run2\"}]}"
-         echo "::set-output name=matrix::$matrixStringifiedObject"
-      
-  build:
-    needs: [ setup ]
+           matrixStringifiedObject="{\"include\":[{\"run\":\"run1\"},{\"run\":\"run2\"}]}"
+           echo "::set-output name=matrix::$matrixStringifiedObject"
+  job2:
+    needs: job1
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        element: ${{ fromJson(needs.setup.outputs.message)}}
-
+      matrix: ${{ fromJson(needs.job1.outputs.matrix) }}
     steps:
-      - name: Get London Time   
-        run: ${{ matrix.element }}
+    - run: echo Run ${{ matrix.run }}
+    - run: date
+    - run: sleep 1
+    - run: date
