@@ -3,29 +3,24 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      message: ${{ toJson(steps.split.outputs.json) }}
+      message: ${{ steps.split.outputs.words }}
     steps:
       - uses: actions/checkout@v3
       - name: Récupérer le message de commit
         id: get_commit_message
-        run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})"  
-      - name: Extract words from string 
-        id: split
+        run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})" 
+      - name: split
         run: |
          my_string="Hello,world,how,are,you"
-         words=(${my_string//,/ })
-         json=$(jq -n --argjson arr '["${words[@]}"]' '{words: $arr}')
-         echo "::set-output name=json::$json}"
-      - name: show  
-        run: | 
-         echo ${{ steps.split.outputs.json }}
+                  words=(${my_string//,/ })
+                  echo "::set-output name=words::${{format('[{0}]',words[@])}}"
       
   build:
     needs: [ setup ]
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        element: ${{ fromJson(needs.setup.outputs.message).words}}
+        element: ${{ fromJson(needs.setup.outputs.message)}}
 
     steps:
       - name: Get London Time   
