@@ -9,7 +9,7 @@ jobs:
       - name: Récupérer le message de commit
         id: get_commit_message
         run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})"  
-      - name: Extract words from string
+      - name: Extract words from string 
         id: split
         run: |
          my_string="Hello,world,how,are,you"
