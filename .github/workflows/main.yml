@@ -3,7 +3,7 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      message: ${{ steps.split.outputs.json )}}
+      message: ${{ steps.split.outputs.json }}
     steps:
       - uses: actions/checkout@v3
       - name: Récupérer le message de commit
