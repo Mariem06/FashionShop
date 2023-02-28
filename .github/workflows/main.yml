@@ -3,7 +3,7 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      message: ${{ steps.split.outputs.words }}
+      message: ${{ steps.split.outputs.matrix }}
     steps:
       - uses: actions/checkout@v3
       - name: Récupérer le message de commit
@@ -11,9 +11,8 @@ jobs:
         run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})" 
       - name: split
         run: |
-         my_string="Hello,world,how,are,you"
-         words=(${my_string//,/ })
-         echo '::set-output name=words::["12","14","16"]'
+         matrixStringifiedObject="{\"include\":[{\"run\":\"run1\"},{\"run\":\"run2\"}]}"
+         echo "::set-output name=matrix::$matrixStringifiedObject"
       
   build:
     needs: [ setup ]
