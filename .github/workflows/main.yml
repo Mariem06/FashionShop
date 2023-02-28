@@ -10,7 +10,7 @@ jobs:
      - name: Récupérer le message de commit
        id: get_commit_message
        run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})" 
-     - name: Set Dynamic Matrix
+     - name: Set Dynamic Matrix 
        id: setmatrix
        env: 
         message: "${{ steps.get_commit_message.outputs.commit_message }}"
