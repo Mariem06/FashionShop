@@ -18,7 +18,7 @@ jobs:
          echo "::set-output name=json::$json}"
       - name: show
         run: | 
-         echo ${{ toJson(steps.split.outputs.json) }}
+         echo ${{ steps.split.outputs.json }}
       
   build:
     needs: [ setup ]
