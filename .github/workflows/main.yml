@@ -6,11 +6,25 @@ jobs:
     outputs:
        matrix: ${{ steps.setmatrix.outputs.matrix }}
     steps:
-      - name: Set Dynamic Matrix
-        id: setmatrix
-        run: |
-           matrixStringifiedObject="{\"include\":[{\"run\":\"run1\"},{\"run\":\"run2\"}]}"
+     - uses: actions/checkout@v3
+     - name: Récupérer le message de commit
+       id: get_commit_message
+       run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})" 
+     - name: Set Dynamic Matrix
+       id: setmatrix
+       env: 
+        message: "${{ steps.get_commit_message.outputs.commit_message }}"
+       run: |
+           matrixStringifiedObject="{\"include\":["
+           IFS=',' read -ra words <<< "$message"
+            for word in "${words[@]}"; do
+              matrixStringifiedObject+="{\"word\":\"$word\"},"
+            done
+                 matrixStringifiedObject+="]}"
            echo "::set-output name=matrix::$matrixStringifiedObject"
+       shell: bash
+           
+         
   job2:
     needs: job1
     runs-on: ubuntu-latest
