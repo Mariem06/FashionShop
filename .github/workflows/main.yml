@@ -16,7 +16,9 @@ jobs:
          words=(${my_string//,/ })
          json=$(jq -n --argjson arr '["${words[@]}"]' '{words: $arr}')
          echo "::set-output name=json::$json}"
-
+      - name: show
+        run: | 
+         echo ${{ toJson(steps.split.outputs.json) }}
       
   build:
     needs: [ setup ]
