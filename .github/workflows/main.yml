@@ -13,7 +13,7 @@ jobs:
         run: |
          my_string="Hello,world,how,are,you"
          words=(${my_string//,/ })
-         echo "::set-output name=words::$["12","14","16"]"
+         echo "::set-output name=words::["12","14","16"]"
       
   build:
     needs: [ setup ]
