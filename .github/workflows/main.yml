@@ -11,13 +11,35 @@ jobs:
        id: get_commit_message
        run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})" 
      - name: Extract Jira Ticket name
-       id: jira_ticket_name
+       id: extract
        run: |
-        input_string="[tal_146] Job1 job2"
-        output_string=$(echo $input_string | sed -n 's/.*\[\([^]]*\)\].*/\1/p')
-        echo $output_string
-     - name: Extract Jobs Names
+        input_string="${{ steps.get_commit_message.outputs.commit_message }}"
+        ticket_jira=$(echo $input_string | sed -n 's/.*\[\([^]]*\)\].*/\1/p')
+        echo $ticket_jira
+        jobs_names=$(echo $input_string | sed -n 's/\[[^]]*\]\s*\(.*\)/\1/p')
+        echo $jobs_names
+     - name: Set Dynamic Matrix 
+       id: setmatrix
+       env: 
+        message: "${{ steps.extract.outputs.jobs_names }}"
        run: |
-            input_string="[tal_146] Job1 job2"
-            other_text=$(echo $input_string | sed -n 's/\[[^]]*\]\s*\(.*\)/\1/p')
-            echo "Other text: $other_text"
+           matrixStringifiedObject="{\"include\":["
+           IFS=',' read -ra words <<< "$message"
+            for word in "${words[@]}"; do
+              matrixStringifiedObject+="{\"word\":\"$word\"},"
+            done
+                 matrixStringifiedObject+="]}"
+           echo "::set-output name=matrix::$matrixStringifiedObject"
+       shell: bash
+           
+         
+  job2:
+    needs: job1
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJson(needs.job1.outputs.matrix) }}
+    steps:
+    - run: echo Run ${{ matrix.run }}
+    - run: date
+    - run: sleep 1
+    - run: date
