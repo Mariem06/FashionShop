@@ -51,7 +51,7 @@ jobs:
         accept: 200,201,204
         basic-auth-token: ${{ secrets.JIRA_TOKEN }}
         log-response: true
-        data : '{"transition": {"id": "21"}}'
+        params : '{"transition": {"id": "21"}}'
       
            
          
