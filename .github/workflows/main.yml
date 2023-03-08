@@ -10,8 +10,14 @@ jobs:
      - name: Récupérer le message de commit
        id: get_commit_message
        run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})" 
-     - name: Extract substring in []
+     - name: Extract Jira Ticket name
+       id: jira_ticket_name
        run: |
         input_string="[tal_146] Job1 job2"
         output_string=$(echo $input_string | sed -n 's/.*\[\([^]]*\)\].*/\1/p')
         echo $output_string
+     - name: Extract Jobs Names
+       run: |
+            input_string="[tal_146] Job1 job2"
+            other_text=$(echo $input_string | sed -n 's/\[[^]]*\]\s*\(.*\)/\1/p')
+            echo "Other text: $other_text"
