@@ -31,7 +31,7 @@ jobs:
                  matrixStringifiedObject+="]}"
            echo "::set-output name=matrix::$matrixStringifiedObject"
        shell: bash
-     - name: Check Jira
+     - name: Check Jira  
        run: echo "${{ steps.extract.outputs.ticket_jira }}"
      - name: Get JIRA TICKET
        uses: fjogeleit/http-request-action@v1
