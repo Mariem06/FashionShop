@@ -35,21 +35,23 @@ jobs:
        run: echo "${{ steps.extract.outputs.ticket_jira }}"
      - name: Get JIRA TICKET
        uses: indiesdev/curl@v1.1
-       id: ticket
+       id: get_ticket
        with:
         url: 'https://olive-soft.atlassian.net/rest/api/3/issue/${{ steps.extract.outputs.ticket_jira }}'
         method: 'GET'
         accept: 200,201,204
         basic-auth-token: ${{ secrets.JIRA_TOKEN }}
         log-response: true
-     - name: Get Artifacts from Commit message
-       uses: fjogeleit/http-request-action@v1
+     - name: Get JIRA TICKET
+       uses: indiesdev/curl@v1.1
+       id: update_ticket
        with:
         url: 'https://olive-soft.atlassian.net/rest/api/3/issue/${{ steps.extract.outputs.ticket_jira }}'
-        method: 'GET'
+        method: 'PUT'
+        accept: 200,201,204
         basic-auth-token: ${{ secrets.JIRA_TOKEN }}
-        customHeaders: '{"Content-Type": "application/json"}'
-
+        log-response: true
+        body: '{ "transition": {"id": "21"}}'
       
            
          
