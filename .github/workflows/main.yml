@@ -13,6 +13,14 @@ jobs:
      - name: Generate output string
        run: |
          input_string="[tal123] job 1 job2"
-          output_string=$(echo "$input_string" | sed 's/[^[:alnum:]]//g')
-          output_string="${output_string}"
-          echo $output_string
+          # extract substring in brackets
+          $substring = $input_string -replace '[^\[\]]*\[([^\[\]]*)\].*', '$1'
+          # extract text outside of brackets
+          $other_text = $input_string -replace '\[([^\[\]]*)\]', ''
+          # set output variables
+          Write-Output "::set-output name=substring::$substring"
+          Write-Output "::set-output name=other_text::$other_text"
+     - name: Print Outputs
+       run: |
+          echo "Substring: ${{ steps.extract.outputs.substring }}"
+          echo "Other Text: ${{ steps.extract.outputs.other_text }}"
