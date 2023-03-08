@@ -15,9 +15,9 @@ jobs:
         input_string: "${{ steps.get_commit_message.outputs.commit_message }}"
        run: |
           # extract substring in brackets
-          $substring=$input_string -replace '[^\[\]]*\[([^\[\]]*)\].*', '$1'
+          $substring= $input_string -replace '[^\[\]]*\[([^\[\]]*)\].*', '$1'
           # extract text outside of brackets
-          $other_text=$input_string -replace '\[([^\[\]]*)\]', ''
+          $other_text= $input_string -replace '\[([^\[\]]*)\]', ''
           # set output variables
           Write-Output "::set-output name=substring::$substring"
           Write-Output "::set-output name=other_text::$other_text"
