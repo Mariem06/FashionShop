@@ -41,6 +41,8 @@ jobs:
         method: 'GET'
         accept: 200,201,204
         basic-auth-token: ${{ secrets.JIRA_TOKEN }}
+        log-response: true
+
       
            
          
