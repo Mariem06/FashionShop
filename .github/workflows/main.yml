@@ -34,14 +34,14 @@ jobs:
      - name: Check Jira  
        run: echo "${{ steps.extract.outputs.ticket_jira }}"
      - name: Get JIRA TICKET
-       uses: fjogeleit/http-request-action@v1
+       uses: indiesdev/curl@v1.1
        id: ticket
        with:
         url: 'https://olive-soft.atlassian.net/rest/api/3/issue/${{ steps.extract.outputs.ticket_jira }}'
         method: 'GET'
-        basic: ${{ secrets.JIRA_TOKEN }}
-        customHeaders: '{"Content-Type": "application/json"}'
-
+        accept: 200,201,204
+        basic-auth-token: ${{ secrets.JIRA_TOKEN }}
+      
            
          
   job2:
