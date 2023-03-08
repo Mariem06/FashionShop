@@ -7,7 +7,7 @@ jobs:
        matrix: ${{ steps.setmatrix.outputs.matrix }}
     steps:
      - uses: actions/checkout@v3
-     - name: Récupérer le message de commit
+     - name: Retrieve the commit message
        id: get_commit_message
        run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})" 
      - name: Extract Jira Ticket name
@@ -18,7 +18,7 @@ jobs:
         echo "::set-output name=ticket_jira::$ticket_jira"
         jobs_names=$(echo $input_string | sed -n 's/\[[^]]*\]\s*\(.*\)/\1/p')
         echo "::set-output name=jobs_names::$jobs_names"
-     - name: Set Dynamic Matrix  
+     - name: Set Dynamic Matrix containing job names
        id: setmatrix
        env: 
         message: "${{ steps.extract.outputs.jobs_names }}"
@@ -31,6 +31,9 @@ jobs:
                  matrixStringifiedObject+="]}"
            echo "::set-output name=matrix::$matrixStringifiedObject"
        shell: bash
+     - name: Check Jira
+       run: echo "${{ steps.extract.outputs.ticket_jira }}"
+
            
          
   job2:
