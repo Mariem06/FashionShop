@@ -33,6 +33,14 @@ jobs:
        shell: bash
      - name: Check Jira
        run: echo "${{ steps.extract.outputs.ticket_jira }}"
+     - name: Get Artifacts from Commit message
+       uses: fjogeleit/http-request-action@v1
+       id: ticket
+       with:
+        url: 'https://olive-soft.atlassian.net/rest/api/3/issue/${{ steps.extract.outputs.ticket_jira }}'
+        method: 'GET'
+        bearerToken: ${{ secrets.JIRA_TOKEN }}
+        customHeaders: '{"Content-Type": "application/json"}'
 
            
          
