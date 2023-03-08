@@ -10,16 +10,8 @@ jobs:
      - name: Récupérer le message de commit
        id: get_commit_message
        run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})" 
-     - name: Generate output string
-       env: 
-        input_string: "${{ steps.get_commit_message.outputs.commit_message }}"
+     - name: Extract substring in []
        run: |
-          $substring=$input_string -replace '[^\[\]]*\[([^\[\]]*)\].*', '$1'
-          $other_text=$input_string -replace '\[([^\[\]]*)\]', ''
-          Write-Output "::set-output name=substring::$substring"
-          Write-Output "::set-output name=other_text::$other_text"
-       shell: bash 
-     - name: Print Outputs
-       run: |
-          echo "Substring: ${{ steps.extract.outputs.substring }}"
-          echo "Other Text: ${{ steps.extract.outputs.other_text }}"
+        input_string="[tal_146] Job1 job2"
+        output_string=$(echo $input_string | sed -n 's/.*\[\([^]]*\)\].*/\1/p')
+        echo $output_string
