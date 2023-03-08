@@ -46,8 +46,8 @@ jobs:
        uses: indiesdev/curl@v1.1
        id: update_ticket
        with:
-        url: 'https://olive-soft.atlassian.net/rest/api/3/issue/${{ steps.extract.outputs.ticket_jira }}'
-        method: 'PUT'
+        url: 'https://olive-soft.atlassian.net/rest/api/3/issue/${{ steps.extract.outputs.ticket_jira }}/transitions'
+        method: 'POST'
         accept: 200,201,204
         basic-auth-token: ${{ secrets.JIRA_TOKEN }}
         log-response: true
