@@ -33,7 +33,7 @@ jobs:
        shell: bash
      - name: Check Jira
        run: echo "${{ steps.extract.outputs.ticket_jira }}"
-     - name: Get Artifacts from Commit message
+     - name: Get JIRA TICKET
        uses: fjogeleit/http-request-action@v1
        id: ticket
        with:
