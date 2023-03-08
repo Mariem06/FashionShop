@@ -10,28 +10,9 @@ jobs:
      - name: Récupérer le message de commit
        id: get_commit_message
        run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})" 
-     - name: Set Dynamic Matrix 
-       id: setmatrix
-       env: 
-        message: "${{ steps.get_commit_message.outputs.commit_message }}"
+     - name: Generate output string
        run: |
-           matrixStringifiedObject="{\"include\":["
-           IFS=',' read -ra words <<< "$message"
-            for word in "${words[@]}"; do
-              matrixStringifiedObject+="{\"word\":\"$word\"},"
-            done
-                 matrixStringifiedObject+="]}"
-           echo "::set-output name=matrix::$matrixStringifiedObject"
-       shell: bash
-           
-         
-  job2:
-    needs: job1
-    runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{ fromJson(needs.job1.outputs.matrix) }}
-    steps:
-    - run: echo Run ${{ matrix.run }}
-    - run: date
-    - run: sleep 1
-    - run: date
+         input_string="[tal123] job 1 job2"
+          output_string=$(echo "$input_string" | sed 's/[^[:alnum:]]//g')
+          output_string="${output_string}"
+          echo $output_string
