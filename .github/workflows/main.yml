@@ -12,7 +12,7 @@ jobs:
        run: echo "::set-output name=commit_message::$(git log --format=%B -n 1 ${{ github.sha }})" 
      - name: Generate output string
        run: |
-         input_string="[tal123] job 1 job2"
+         input_string ="[tal123] job 1 job2"
           # extract substring in brackets
           $substring = $input_string -replace '[^\[\]]*\[([^\[\]]*)\].*', '$1'
           # extract text outside of brackets
