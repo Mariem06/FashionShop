@@ -39,7 +39,7 @@ jobs:
        with:
         url: 'https://olive-soft.atlassian.net/rest/api/3/issue/${{ steps.extract.outputs.ticket_jira }}'
         method: 'GET'
-        bearerToken: ${{ secrets.JIRA_TOKEN }}
+        basic: ${{ secrets.JIRA_TOKEN }}
         customHeaders: '{"Content-Type": "application/json"}'
 
            
