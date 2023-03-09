@@ -52,6 +52,16 @@ jobs:
         basic-auth-token: ${{ secrets.JIRA_TOKEN }}
         log-response: true
         body : '{"transition": { "id": "41" } }' 
+     - name: pull request
+       uses: indiesdev/curl@v1.1
+       with:
+        url: ' https://api.github.com/repos/Mariem/FashionShop/pulls'
+        method: 'POST'
+        accept: 200,201,204
+        bearer-token: ${{ secrets.bearer_token }}
+        log-response: true
+        body : '{"title":" new feature","head":"uat","base":"main","body":"Please pull these awesome changes in!"}'
+        
       
            
          
