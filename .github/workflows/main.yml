@@ -53,7 +53,7 @@ jobs:
     #     log-response: true
     #     body : '{"transition": { "id": "41" } }' 
      - name: test 
-        run echo " ${{ steps.setmatrix.outputs.matrix }}"
+       run: echo " ${{ steps.setmatrix.outputs.matrix }}"
       
            
          
