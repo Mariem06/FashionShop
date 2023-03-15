@@ -65,7 +65,6 @@ jobs:
     steps:
     - run: echo Run ${{ matrix.word }}
     - run: echo " only the first run  ${{ matrix.word }}"
-      if: ${{ matrix[0] == matrix.value }}
-
+      if: ${{ matrix[0].word }} == ${{ matrix.word }}
     
     
