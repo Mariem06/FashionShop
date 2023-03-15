@@ -31,27 +31,27 @@ jobs:
                  matrixStringifiedObject+="]}"
            echo "::set-output name=matrix::$matrixStringifiedObject"
        shell: bash
-     - name: Check Jira  
-       run: echo "${{ steps.extract.outputs.ticket_jira }}"
-     - name: Get JIRA TICKET
-       uses: indiesdev/curl@v1.1
-       id: get_ticket
-       with:
-        url: 'https://olive-soft.atlassian.net/rest/api/3/issue/${{ steps.extract.outputs.ticket_jira }}'
-        method: 'GET'
-        accept: 200,201,204
-        basic-auth-token: ${{ secrets.JIRA_TOKEN }}
-        log-response: true
-     - name: Get JIRA TICKET
-       uses: indiesdev/curl@v1.1
-       id: update_ticket
-       with:
-        url: 'https://olive-soft.atlassian.net/rest/api/2/issue/${{ steps.extract.outputs.ticket_jira }}/transitions'
-        method: 'POST'
-        accept: 200,201,204
-        basic-auth-token: ${{ secrets.JIRA_TOKEN }}
-        log-response: true
-        body : '{"transition": { "id": "41" } }' 
+    #  - name: Check Jira  
+    #    run: echo "${{ steps.extract.outputs.ticket_jira }}"
+    #  - name: Get JIRA TICKET
+    #    uses: indiesdev/curl@v1.1
+    #    id: get_ticket
+    #    with:
+    #     url: 'https://olive-soft.atlassian.net/rest/api/3/issue/${{ steps.extract.outputs.ticket_jira }}'
+    #     method: 'GET'
+    #     accept: 200,201,204
+    #     basic-auth-token: ${{ secrets.JIRA_TOKEN }}
+    #     log-response: true
+    #  - name: Get JIRA TICKET
+    #    uses: indiesdev/curl@v1.1
+    #    id: update_ticket
+    #    with:
+    #     url: 'https://olive-soft.atlassian.net/rest/api/2/issue/${{ steps.extract.outputs.ticket_jira }}/transitions'
+    #     method: 'POST'
+    #     accept: 200,201,204
+    #     basic-auth-token: ${{ secrets.JIRA_TOKEN }}
+    #     log-response: true
+    #     body : '{"transition": { "id": "41" } }' 
       
            
          
@@ -62,3 +62,8 @@ jobs:
       matrix: ${{ fromJson(needs.job1.outputs.matrix) }}
     steps:
     - run: echo Run ${{ matrix.word }}
+    - run: echo " only the first run  ${{ matrix.word }}"
+      if: ${{ matrix[0] == matrix.value }}
+
+    
+    
