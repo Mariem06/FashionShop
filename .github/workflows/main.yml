@@ -53,7 +53,7 @@ jobs:
     #     log-response: true
     #     body : '{"transition": { "id": "41" } }' 
      - name: test 
-       run: echo " ${{ steps.setmatrix.outputs.matrix }}"
+       run: echo " ${{ fromJson(steps.setmatrix.outputs.matrix)}}"
       
            
          
@@ -63,7 +63,7 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.job1.outputs.matrix) }}
     steps:
-    - run: echo Run ${{ matrix[0] }}
+    - run: echo Run ${{ matrix[0].word }}
     - run: echo " only the first run  ${{ matrix.word }}"
       if: ${{ matrix[0].word }} == ${{ matrix.word }}
     
