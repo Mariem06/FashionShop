@@ -63,7 +63,7 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.job1.outputs.matrix) }}
     env:
-     first: ${{ fromJson(needs.job1.outputs.matrix).include[0].word }}
+     first: ${{fromJson(needs.job1.outputs.matrix).include[0].word}}
     steps:
     - run: echo " ${{ matrix.word }}"
     - name: rrr
