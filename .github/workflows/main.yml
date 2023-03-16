@@ -63,7 +63,7 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.job1.outputs.matrix) }}
     steps:
-    - run: echo Run ${{ matrix[0].word }}
+    - run: echo Run ${{ matrix }}
     - run: echo " only the first run  ${{ matrix.word }}"
       if: ${{ matrix[0].word }} == ${{ matrix.word }}
     
