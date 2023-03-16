@@ -65,8 +65,8 @@ jobs:
     env:
      first: ${{ fromJson(needs.job1.outputs.matrix).include[0].word }}
     steps:
-    - run: echo " $first"
-    - run: echo " only the first run  ${{ matrix.word }}"
-      if: ${{ matrix[0].word }} == ${{ matrix.word }}
+    - run: echo " ${{ matrix.word }}"
+    - run: echo " only the first word ${{ matrix.word }}"
+      if:  $first == ${{ matrix.word }}
     
     
