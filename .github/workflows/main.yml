@@ -68,7 +68,7 @@ jobs:
     - run: echo " ${{ matrix.word }}"
     - name: rrr
       if:  $first == ${{ matrix.word }}
-      run: echo " only the first word ${{ matrix.word }}"
+      run: echo " only the first word ${{ matrix.word }} $first"
       
     
     
