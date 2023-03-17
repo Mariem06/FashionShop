@@ -54,21 +54,37 @@ jobs:
     #     body : '{"transition": { "id": "41" } }' 
      - name: test 
        run: echo " ${{ fromJson(steps.setmatrix.outputs.matrix).include[0].word}}"
+  TO_DEV_build:
+    name: TO_DEV_build
+    needs: job1
+    outputs:
+       matrix: ${{ fromJson(needs.job1.outputs.matrix)}}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11.0.16'
+        distribution: 'temurin '
+    - name: Set up Maven
+      uses: stCarolas/setup-maven@v4.5
+      with :
+        maven-version: 3.8.6
+    - name: Build with Maven
+      run: echo "Build with Maven"
+    - name:  publish to cloud
+      run: echo " publish to cloud"
+ 
       
            
          
   job2:
-    needs: job1
+    needs: TO_DEV_build
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJson(needs.job1.outputs.matrix) }}
-    env:
-     first: ${{fromJson(needs.job1.outputs.matrix).include[0].word}}
+      matrix: ${{ fromJson(needs.TO_DEV_build.outputs.matrix) }}
     steps:
     - run: echo " ${{ matrix.word }}"
-    - name: rrr
-      if: ${{ ('$first' == '${{ matrix.word }}')}}
-      run: echo " only the first word ${{ matrix.word }} $first"
-      
+ 
     
     
