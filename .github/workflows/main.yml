@@ -57,8 +57,6 @@ jobs:
   TO_DEV_build:
     name: TO_DEV_build
     needs: job1
-    outputs:
-       matrix: ${{ fromJson(needs.job1.outputs.matrix)}}
     runs-on: ubuntu-latest
     steps:
     - name: Set up JDK 11
@@ -79,10 +77,10 @@ jobs:
            
          
   job2:
-    needs: TO_DEV_build
+    needs: [job1,TO_DEV_build]
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJson(needs.TO_DEV_build.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.job1.outputs.matrix) }}
     steps:
     - run: echo " ${{ matrix.word }}"
  
