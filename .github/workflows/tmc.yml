@@ -1,0 +1,13 @@
+name: TMC
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Get Artifacts
+      run: |
+        curl -X GET --header 'Accept: application/json' --header 'Authorization: Bearer ${{ secrets.TMC_TOKEN }}' 'https://api.eu.cloud.talend.com/tmc/v2.6/artifacts'
