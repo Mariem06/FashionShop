@@ -16,3 +16,4 @@ jobs:
         method: 'GET'
         bearerToken: ${{ secrets.TMC_TOKEN }}
         customHeaders: '{"Content-Type": "application/json"}'
+    - run: echo "${{ steps..artifacts.outputs }}"
