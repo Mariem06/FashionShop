@@ -8,6 +8,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Get Artifacts
-      run: |
-        curl -X GET --header 'Accept: application/json' --header 'Authorization: Bearer ${{ secrets.TMC_TOKEN }}' 'https://api.eu.cloud.talend.com/tmc/v2.6/artifacts'
+    - name: Get Artifacts from Commit message
+      uses: fjogeleit/http-request-action@v1
+      id: artifacts
+      with:
+        url: 'https://api.eu.cloud.talend.com/tmc/v2.6/artifacts'
+        method: 'GET'
+        bearerToken: ${{ secrets.TMC_TOKEN }}
+        customHeaders: '{"Content-Type": "application/json"}'
