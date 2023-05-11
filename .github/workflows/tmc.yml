@@ -8,12 +8,23 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Get Artifacts from Commit message
-      uses: fjogeleit/http-request-action@v1
-      id: artifacts
-      with:
-        url: 'https://api.eu.cloud.talend.com/tmc/v2.6/artifacts'
-        method: 'GET'
-        bearerToken: ${{ secrets.TMC_TOKEN }}
-        customHeaders: '{"Content-Type": "application/json"}'
-    - run: echo "${{ steps..artifacts.outputs }}"
+    - name: Extract Jira Ticket name, workspace and jobs names
+      id: extract
+      run: |
+          input_string="[tal-123] description {job1,job2} #plm"
+          ticket_jira=$(echo $input_string | sed -n 's/.*\[\([^]]*\)\].*/\1/p')
+          echo "::set-output name=ticket_jira::$ticket_jira"
+          jobs_names=$(echo $input_string | sed -n 's/.*{\([^}]*\)}.*$/\1/p')
+          echo "::set-output name=jobs_names::$jobs_names"
+          workspace_name="${input_string##*#}"
+          echo "::set-output name=workspace_name::$workspace_name"
+    - run: echo "${{ steps.extract.outputs.workspace_name }}"
+#     - name: Get Artifacts from Commit message
+#       uses: fjogeleit/http-request-action@v1
+#       id: artifacts
+#       with:
+#         url: 'https://api.eu.cloud.talend.com/tmc/v2.6/artifacts'
+#         method: 'GET'
+#         bearerToken: ${{ secrets.TMC_TOKEN }}
+#         customHeaders: '{"Content-Type": "application/json"}'
+#     - run: echo "${{ steps..artifacts.outputs }}"
